@@ -1,1 +1,1 @@
-# razvivayka
+****factoryMethod**** - *Фабричный метод*
