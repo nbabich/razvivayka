@@ -1,7 +1,14 @@
 <?php
 
-namespace samples;
+namespace factoryMethod;
 
+/**
+ * Главный класс
+ *
+ * Class Creator
+ *
+ * @package factoryMethod
+ */
 abstract class Creator
 {
     abstract public function factoryMethod(): Render;
@@ -16,24 +23,38 @@ abstract class Creator
     }
 }
 
+/**
+ * Типа отправляет данные в БЦК по своему
+ *
+ * @package factoryMethod
+ */
 class BCCCreator extends Creator
 {
 
     public function factoryMethod(): Render
     {
-        return new BCCSender;
+        return new BCCRender;
     }
 }
 
+/**
+ * Типа отправляет данные в ХКБ по своему
+ *
+ * @package factoryMethod
+ */
 class HCBCreator extends Creator
 {
     public function factoryMethod(): Render
     {
-        return new HCBSender;
+        return new HCBRender;
     }
 }
 
-
+/**
+ * Интерфейс для приведения к общему формату данных
+ *
+ * @package factoryMethod
+ */
 interface Render
 {
     public function renderConfig(): array;
@@ -41,9 +62,18 @@ interface Render
     public function getLeads(): array;
 }
 
-
-class BCCSender implements Render
+/**
+ * Генерирует данные для БЦК
+ *
+ * @package factoryMethod
+ */
+class BCCRender implements Render
 {
+    /**
+     * Генерит или получает откуда-то конфиги для БЦК
+     *
+     * @return array
+     */
     public function renderConfig(): array
     {
         return [
@@ -53,6 +83,11 @@ class BCCSender implements Render
         ];
     }
 
+    /**
+     * Генерит или получает откуда-то данные для БЦК
+     *
+     * @return array
+     */
     public function getLeads(): array
     {
         return [
@@ -78,8 +113,18 @@ class BCCSender implements Render
     }
 }
 
-class HCBSender implements Render
+/**
+ * Генерирует данные для ХКБ
+ *
+ * @package factoryMethod
+ */
+class HCBRender implements Render
 {
+    /**
+     * Генерит или получает откуда-то конфиги для ХКБ
+     *
+     * @return array
+     */
     public function renderConfig(): array
     {
         return [
@@ -89,6 +134,11 @@ class HCBSender implements Render
         ];
     }
 
+    /**
+     * Генерит или получает откуда-то данные для ХКБ
+     *
+     * @return array
+     */
     public function getLeads(): array
     {
         return [
@@ -114,8 +164,12 @@ class HCBSender implements Render
     }
 }
 
-
-function clientCode(Creator $creator)
+/**
+ * Выполняет типа отправку в банки
+ *
+ * @param \factoryMethod\Creator $creator
+ */
+function client(Creator $creator)
 {
     echo "<table style='width:50%; border: 2px solid black'><tr><th style='text-align: left; border: 1px solid black'>Конфигурация</th><th style='text-align: left; border: 1px solid black'>Значение</th></tr>";
     $array = $creator->someOperation();
@@ -128,7 +182,7 @@ function clientCode(Creator $creator)
     }
     echo "</table>";
 
-    echo '<h3>Готовые лиды</h3>';
+    echo '<h3>Готовые лиды для отправки</h3>';
     echo "<table style='width:50%; border: 2px solid black'>
             <tr>
                 <th style='text-align: left; border: 1px solid black'>id</th>
@@ -152,9 +206,8 @@ function clientCode(Creator $creator)
 
 }
 
-echo "<h2>Отправка в БЦК.</h2>";
-clientCode(new BCCCreator);
-echo "<p></p>";
-
-echo "<h2>Отправка в ХКБ.</h2>";
-clientCode(new HCBCreator());
+echo "<h1>Factory Method</h1>";
+echo "<h3>Отправка в БЦК.</h3>";
+client(new BCCCreator);
+echo "<h3>Отправка в ХКБ.</h3>";
+client(new HCBCreator());
